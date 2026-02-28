@@ -1,0 +1,34 @@
+{
+  "holidays": [
+    { "date": "0-1", "holiday": "New Year's Day" },
+
+    { "date": "1-14", "holiday": "Valentino's Day" },
+
+    { "date": "2-8", "holiday": "International Women's Day" },
+    { "date": "2-20", "holiday": "International Day of Happiness" },
+
+    { "date": "4-1", "holiday": "Labour Day (Kenya)" },
+
+    { "date": "4-2", "holiday": "Mother's Day (Second Sunday of May)" },
+
+    { "date": "5-1", "holiday": "Madaraka Day (Kenya)" },
+
+    { "date": "5-3", "holiday": "Father's Day (Third Sunday of June)" },
+
+    { "date": "7-1", "holiday": "Girlfriend's Day" },
+    { "date": "7-12", "holiday": "International Youth Day" },
+
+    { "date": "8-19", "holiday": "International Men's Day" },
+
+    { "date": "9-10", "holiday": "Huduma Day (Kenya)" },
+    { "date": "9-20", "holiday": "Mashujaa Day (Kenya)" },
+
+    { "date": "10-11", "holiday": "Jamhuri Day (Kenya)" },
+
+    {"date": "11-3", "holiday": "happy Birthday"},
+
+    { "date": "11-25", "holiday": "Christmas Day" },
+    { "date": "11-26", "holiday": "Boxing Day" }
+
+  ]
+}

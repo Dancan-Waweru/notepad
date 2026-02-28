@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Ophelia</title>
+	<link rel="icon" href="icons/progress.png" type="image/x-icon"> 
+	<link rel="stylesheet" href="index.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+</head>
+<body>
+	<header>
+		<div><a href="authentication/" title="already have an account. welcome back">log in</a></div>
+		<div><a href="sign_up.html" title="dont have an account. create an account">sign up</a></div>
+	</header>
+
+	<main class="main">
+		<div class="concept">
+		<h1>Ophelia</h1>
+		<hr>
+		<p id="p"></p>
+		</div>
+	</main>
+
+	<script>
+		let p=document.getElementById('p');
+
+let sentence=`The name comes from Greek roots: ophelos, meaning “help” or “benefit.” On paper it means “the one who brings help.”
+But the world remembers it differently because Shakespeare gave the name to a girl who loved too deeply and was crushed by the weight of everyone else’s madness. So the name picked up this ghost-like aura: fragile beauty, emotional depth, someone drifting between clarity and chaos.`;
+
+let index = 0;
+let a = "";
+
+function songs_of_solomon() {
+    if (index >= sentence.length) {
+        clearInterval(runsequence);
+        return "songs of solomon complete";
+    }
+    
+    a = a+sentence[index];
+    let b = "●";
+    p.textContent = a + b;
+
+    index++;  
+}
+
+let runsequence = setInterval(songs_of_solomon, 50);
+	</script>
+
+</body>
+</html>
