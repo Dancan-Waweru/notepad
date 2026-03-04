@@ -1,4 +1,5 @@
 import{ DayGroup, Reminder, bridge} from "./reminders.js"
+import {DOMrem} from "./DOMrem.js"
 
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 
@@ -150,6 +151,8 @@ export async function calendar() {
     return result;
   }
 
+
+
   function render() {
     simple.innerHTML = "";
 
@@ -195,6 +198,22 @@ export async function calendar() {
       table2.appendChild(row);
 
       week.forEach(day => {
+
+        function rem(currentYear, currentMonth, day) {
+          const dateString = `${currentYear}-${currentMonth}-${day}`;
+
+          const reminderVariable = bridge.find(dateString);
+
+          const txtRem=`${months[currentMonth]}_${day}_${currentYear}`;
+
+          if (reminderVariable) {
+            DOMrem(dateString, txtRem);
+          } else {
+            bridge.add(dateString);
+            DOMrem(dateString, txtRem);
+          }
+        }
+
         const td = document.createElement("td");
         const container = document.createElement("div");
         container.classList.add("dateContainer");
@@ -277,6 +296,10 @@ smalltxt.style.textAlign="right"
 
         td.appendChild(container);
         row.appendChild(td);
+
+            td.addEventListener("click", () => {
+      rem(currentYear, currentMonth, day);
+    });
       });
     });
   }

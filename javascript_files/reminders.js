@@ -1,4 +1,6 @@
 import {userInput} from "./index.js"
+import {DOMrem} from "./DOMrem.js";
+import {CTA, text, button, showPopup} from "./CTA.js"
 
 
 export class DayGroup {
@@ -7,11 +9,14 @@ export class DayGroup {
         this.reminders = [];
     }
 
-    addReminder(name) {
+    addReminder(date) {
+        userInput("what would you like me to remind you?", (name)=>{
         const clean = name.toLowerCase();
 	    if (this.findReminder(clean)) return false;
 	    this.reminders.push(new Reminder(clean));
-	    return true;
+        DOMrem(date); 
+        showPopup("added a reminder")
+	    return true;});
     }
 
     removeReminder(name) {

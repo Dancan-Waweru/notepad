@@ -135,12 +135,12 @@ add.addEventListener("click", () => {
   let todo = button("goal");
   todo.title = "add goal";
   todo.addEventListener("click", ()=>{dialog.close();
-    spreadsheet.addGoal(); dialog.remove();
+    spreadsheet.addGoal(); dialog.remove(); ritual();
 })
 
   let goal = button("habit");
   goal.title = "add a habit";
-  goal.addEventListener("click", ()=>{dialog.close(); spreadsheet.addHabit(); dialog.remove()})
+  goal.addEventListener("click", ()=>{dialog.close(); spreadsheet.addHabit(); dialog.remove(); ritual();})
 
   let smll=document.createElement("small");
   smll.textContent="press esc to remove"

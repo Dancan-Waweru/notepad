@@ -6,14 +6,7 @@ import {ritual} from "./ritual.js"
 import {typeWriter} from "./typeWriter.js"
 import {CTA, text, button, showPopup} from "./CTA.js"
 import {DOMrem} from "./DOMrem.js";
-
-
-bridge.add("2026-1-28");
-let today=bridge.find("2026-1-28");
-let reminder1=today.addReminder("wash the dishes");
-let reminder2=today.addReminder("clean the house");
-let reminder3=today.addReminder("Inter-University CTF challenges");
-let reminder4=today.addReminder("tenis at 5");
+import { today as getToday } from "./time.js";
 
 
 
@@ -49,14 +42,29 @@ function controlPanel(){
 		div.appendChild(smallText);
 	}
 
+
+	let todaysRem = bridge.find(getToday());
+
 	function para() {
-    let p=document.createElement("p");
-    p.textContent = `${today.reminders[0].name}`;
-    return p;  
-}
+	  let p = document.createElement("p");
 
+	  if (todaysRem && todaysRem.reminders.length > 0) {
+	    p.textContent = todaysRem.reminders[0].name;
+	  } else {
+	    p.textContent = "no set reminders :(";
+	  }
 
-	feature("reminders", "reminders", para, `${today.reminders.length-1} more reminders`);
+	  return p;
+	}
+
+	feature(
+	  "reminders",
+	  "reminders",
+	  para,
+	  `${todaysRem && todaysRem.reminders.length > 0 
+	      ? todaysRem.reminders.length 
+	      : "no"} more reminders`
+		);
 
 
 	feature("time", getDate(), time, "nothing special today");
@@ -144,8 +152,6 @@ export function userInput(prompt, callback = () => {}) {
       event.preventDefault();
       callback(box.value);
       userInput("waiting");
-      ritual();
-      showPopup("saved !")
     }
   });
 
