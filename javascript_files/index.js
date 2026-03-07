@@ -7,6 +7,7 @@ import {typeWriter} from "./typeWriter.js"
 import {CTA, text, button, showPopup} from "./CTA.js"
 import {DOMrem} from "./DOMrem.js";
 import { today as getToday } from "./time.js";
+import daystate from "./today.js";
 
 
 
@@ -66,8 +67,36 @@ function controlPanel(){
 	      : "no"} more reminders`
 		);
 
+let holidayData;
 
-	feature("time", getDate(), time, "nothing special today");
+async function loadHolidays() {
+  try {
+    const response = await fetch(`../javascript_files/holidays.json?t=${Date.now()}`);
+    holidayData = await response.json();
+
+    startApp(); // run the rest only after data loads
+  } catch (error) {
+    console.error("Holiday file failed to load:", error);
+  }
+}
+
+loadHolidays();
+
+function getHoliday(damonth) {
+  const found = holidayData.holidays.find(h => h.date === damonth);
+
+  if (found) {
+    return found;
+  } else {
+    return "nothing special today :)";
+  }
+}
+
+function startApp() {
+  let daMonth = `${new Date().getMonth()}-${new Date().getDate()}`;
+  feature("time", getDate(), time, getHoliday(daMonth));
+}
+
 
 if (document.querySelector("#time p")) {
 	setInterval(() => {
@@ -109,28 +138,19 @@ return (c);
 
 controlPanel();
 
+daystate.changeDate();
+
 function article(){
 	let div = document.createElement("div");
 	div.classList.add("inspire");
 
-
-
-	fetch('../javascript_files/index.json')
-  .then(res => res.json())
-  .then(data => {
-    const articleElement = random(data); // pass data into random
-    div.appendChild(articleElement); // example: add it to page
-  })
-  .catch(err => console.error(err));
-
-function random(data){
   let article = document.createElement('article');
-  article.textContent = `"`+data[Math.floor(Math.random() * data.length)];
+  article.textContent = daystate.inspiration;
   article.style.fontSize="2rem";
-  article.style.textAlign="center"
-  return article;
-}
+  article.style.textAlign="center";
+  article.id="inspiration";
 
+div.appendChild(article)
 	target.appendChild(div);
 }
 
@@ -190,3 +210,24 @@ document.getElementById("notes").addEventListener("click", () => {
 	canvar();
 });
 
+
+export function inspire() {
+  fetch('../javascript_files/index.json')
+    .then(res => res.json())
+    .then(data => {
+      const articleElement = random(data);
+      console.log(articleElement); // or insert into the DOM
+    })
+    .catch(err => console.error("Failed to load inspiration:", err));
+
+
+function random(data) {
+  let output = `"${data[Math.floor(Math.random() * data.length)]}"`;
+  let change=document.getElementById("inspiration");
+  change.textContent=output;
+  return output;
+}
+
+}
+
+console.log(daystate.inspiration);

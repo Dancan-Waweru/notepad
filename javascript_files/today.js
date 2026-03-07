@@ -1,13 +1,12 @@
 
 import { today as getToday } from "./time.js";
-import {userInput} from "./index.js"
+import {userInput, inspire} from "./index.js"
 import { GroupTask, Goal, Habit, dashboard, ToDo} from "./toDo.js"
 
 export const dayState = {
   groups: [],
-  reminders: [],
   date: getToday(),
-  inspiration:"",
+  inspiration:inspire(),
 
   changeDate() {
     const current = getToday();
@@ -20,16 +19,17 @@ export const dayState = {
     } else {
       console.log("why is this day so long!");
     }
+
+    this.inspiration;
   },
 
-addHabit(name) {
-  const clean = name.toLowerCase();
+loadHabit() {
 
-  const habitGroups = this.groups.filter(g => g.type === "habits");
+  const habitGroups = dashboard.groups.filter(g => g.type === "habits");
   if (habitGroups.length === 0) return false;
 
   habitGroups.forEach(group => {
-    group.toDos.push(new ToDo(clean));
+    this.groups.push(group);
   });
 
   return true;
@@ -85,7 +85,9 @@ addHabit(name) {
             target.appendChild(tr);
         }, 100);
     }
-}
+},
+
+
 
 };
 
