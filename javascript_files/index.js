@@ -8,6 +8,8 @@ import {CTA, text, button, showPopup} from "./CTA.js"
 import {DOMrem} from "./DOMrem.js";
 import { today as getToday } from "./time.js";
 import daystate from "./today.js";
+import {inspire} from "./inspiration.js"
+import {userInput} from "./userInput.js"
 
 
 
@@ -156,27 +158,7 @@ div.appendChild(article)
 
 article();
 
-export function userInput(prompt, callback = () => {}) {
 
-	    const initial = document.querySelector(".textarea");
-     if(initial) initial.remove();
-
-
-  const box = document.createElement("textarea");
-  box.classList.add("textarea");
-    document.body.appendChild(box);
-    typeWriter(box, prompt)
-
-  box.addEventListener("keydown", event => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      callback(box.value);
-      userInput("waiting");
-    }
-  });
-
-
-}
 
 
 userInput("hello there, my name is ..., my parent, is still figuring out my name :) ", 50, "placeholder");
@@ -198,7 +180,7 @@ document.getElementById("calendar").addEventListener("click", () => {
 document.getElementById("tasks").addEventListener("click", () => {
 
 	canvar();
-	ritual();
+	ritual(daystate);
 });
 
 document.getElementById("reminders").addEventListener("click", () => {
@@ -211,23 +193,3 @@ document.getElementById("notes").addEventListener("click", () => {
 });
 
 
-export function inspire() {
-  fetch('../javascript_files/index.json')
-    .then(res => res.json())
-    .then(data => {
-      const articleElement = random(data);
-      console.log(articleElement); // or insert into the DOM
-    })
-    .catch(err => console.error("Failed to load inspiration:", err));
-
-
-function random(data) {
-  let output = `"${data[Math.floor(Math.random() * data.length)]}"`;
-  let change=document.getElementById("inspiration");
-  change.textContent=output;
-  return output;
-}
-
-}
-
-console.log(daystate.inspiration);

@@ -1,4 +1,5 @@
-import {userInput} from "./index.js"
+import {inspire} from "./inspiration.js"
+import {userInput} from "./userInput.js"
 
 export function typeWriter(element, text, speed = 50, mode = "placeholder") {
   let index = 0;

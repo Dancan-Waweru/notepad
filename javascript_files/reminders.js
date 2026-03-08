@@ -1,4 +1,4 @@
-import {userInput} from "./index.js"
+import {userInput} from "./userInput.js"
 import {DOMrem} from "./DOMrem.js";
 import {CTA, text, button, showPopup} from "./CTA.js"
 

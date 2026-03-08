@@ -1,4 +1,5 @@
-import {userInput} from "./index.js"
+import {userInput} from "./userInput.js"
+import {ritual} from "./ritual.js"
 
 
 

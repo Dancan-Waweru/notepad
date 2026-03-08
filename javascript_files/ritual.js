@@ -1,164 +1,150 @@
-import { GroupTask, Goal, Habit, dashboard, ToDo} from "./toDo.js"
-import {CTA, text, button, showPopup} from "./CTA.js"
-import {typeWriter} from "./typeWriter.js"
-import daystate from "./today.js";
+// ritual.js
+import { dashboard } from "./toDo.js";
+import { CTA, text, button } from "./CTA.js";
+import { typeWriter } from "./typeWriter.js";
 
-let spreadsheet=daystate;
+export function ritual(dayState) {
 
-export function ritual(){
-	// create container
-        let test = document.querySelector(".simple");
-     if(test) test.remove();
+  let spreadsheet = dayState; // start by viewing dayState
 
+  const test = document.querySelector(".simple");
+  if (test) test.remove();
 
-const simple = document.createElement("div");
-simple.classList.add("simple");
+  const testhr = document.getElementById("hr");
+  if (testhr) testhr.remove();
 
-let acontainer=document.createElement("div");
-acontainer.style.display="flex";
-acontainer.style.justifyContent="left";
-acontainer.style.width="100%"
+  const simple = document.createElement("div");
+  simple.classList.add("simple");
 
-// create buttons
-const buttonOne = document.createElement("button");
-const buttonTwo = document.createElement("button");
+  const acontainer = document.createElement("div");
+  acontainer.style.display = "flex";
+  acontainer.style.justifyContent = "left";
+  acontainer.style.width = "100%";
 
-buttonOne.textContent = "ritual";
-buttonTwo.textContent = "to do's";
+  const buttonOne = document.createElement("button");
+  const buttonTwo = document.createElement("button");
 
-// initial classes
-buttonOne.classList.add("ritual");   // always has ritual
-buttonTwo.classList.add("active");   // first active on load
+  buttonOne.textContent = "ritual";
+  buttonTwo.textContent = "to do's";
 
+  buttonOne.classList.add("ritual");
+  buttonTwo.classList.add("active");
 
-
-// toggle logic: exchange classes
   function activateButton(activeBtn, inactiveBtn) {
     activeBtn.classList.add("active");
     activeBtn.classList.remove("ritual");
 
     inactiveBtn.classList.remove("active");
     inactiveBtn.classList.add("ritual");
-    console.log("something is messing with my head.")
   }
 
-  // Function that only updates table content
   function renderTable() {
     const table = document.getElementById("list");
 
-    // Remove old rows except header
     while (table.rows.length > 1) {
       table.deleteRow(1);
     }
 
-    // Populate table with current spreadsheet data
     spreadsheet.listContents(table);
   }
 
-// events
-buttonOne.addEventListener("click", () => {
+  // SWITCH VIEW
+  buttonOne.addEventListener("click", () => {
     activateButton(buttonOne, buttonTwo);
-    spreadsheet=dashboard;
+    spreadsheet = dashboard;   // switch to dashboard
     renderTable();
-});
+  });
 
-buttonTwo.addEventListener("click", () => {
+  buttonTwo.addEventListener("click", () => {
     activateButton(buttonTwo, buttonOne);
-    spreadsheet=daystate;
+    spreadsheet = dayState;    // switch back to dayState
     renderTable();
-});
+  });
 
-// append buttons to container
-acontainer.appendChild(buttonOne);
-acontainer.appendChild(buttonTwo);
+  acontainer.appendChild(buttonOne);
+  acontainer.appendChild(buttonTwo);
+  simple.appendChild(acontainer);
 
-simple.appendChild(acontainer)
+  const canvar = document.querySelector(".canvar");
+  canvar.appendChild(simple);
 
-// append container to .canvar
-const canvar = document.querySelector(".canvar");
-canvar.appendChild(simple);
+  const hr = document.createElement("hr");
+  hr.style.marginTop = "8vh";
+  hr.id="hr";
+  canvar.appendChild(hr);
 
-    const test5 = document.getElementsByTagName("hr")[0];
-     if(test5) test5.remove();
+  const oldTable = document.getElementById("list");
+  if (oldTable) oldTable.remove();
 
-    const hr=document.createElement("hr");
-    canvar.appendChild(hr);
-    hr.style.marginTop="8vh";
+  const table = document.createElement("table");
+  table.id = "list";
 
-    const test2 = document.getElementById("list");
-     if(test2) test2.remove();
+  const tr = document.createElement("tr");
+  const th = document.createElement("th");
+  th.textContent = "tasks";
 
+  tr.appendChild(th);
+  table.appendChild(tr);
 
-const table = document.createElement("table");
-const tr = document.createElement("tr");
-const th = document.createElement("th");
-th.textContent = "tasks";
-tr.appendChild(th);
-table.appendChild(tr);
-canvar.appendChild(table);
-table.id = "list";
+  canvar.appendChild(table);
 
-spreadsheet.listContents(table);
+  renderTable();
 
-// Add event listener for row clicks
-table.addEventListener("click", function(event) {
-    // Find the closest <tr> that was clicked
+  table.addEventListener("click", (event) => {
+
     const clickedRow = event.target.closest("tr");
     if (!clickedRow) return;
 
-    // Get the text content of the clicked row
     const rowText = clickedRow.textContent.trim();
 
-    // Find the corresponding task object
     const task = spreadsheet.find(rowText);
 
-    // If task exists, call its listContents method with the clicked row as target
     if (task) {
-        task.listContents(clickedRow);
+      task.listContents(clickedRow);
     }
-});
 
+  });
 
+  const oldAdd = document.querySelector(".txtAdd");
+  if (oldAdd) oldAdd.remove();
 
-const test3 = document.querySelector(".txtAdd");
-if (test3) test3.remove();
+  const add = document.createElement("button");
+  add.textContent = "add + ";
+  add.classList.add("txtAdd");
 
+  add.addEventListener("click", () => {
 
-    const add = document.createElement("button");
-add.textContent = "add + ";
-add.classList.add("txtAdd");
+    const dialog = CTA();
+    const title = text("add a goal or a habit");
 
-add.addEventListener("click", () => {
-  let dialog = CTA();
-  let title = text("add a goal or a habit");
+    const goalBtn = button("goal");
+    goalBtn.addEventListener("click", () => {
+      dialog.close();
+      spreadsheet.addGoal();
+      dialog.remove();
+      renderTable();
+    });
 
-  let todo = button("goal");
-  todo.title = "add goal";
-  todo.addEventListener("click", ()=>{dialog.close();
-    spreadsheet.addGoal(); dialog.remove(); ritual();
-})
+    const habitBtn = button("habit");
+    habitBtn.addEventListener("click", () => {
+      dialog.close();
+      spreadsheet.addHabit?.();
+      dialog.remove();
+      renderTable();
+    });
 
-  let goal = button("habit");
-  goal.title = "add a habit";
-  goal.addEventListener("click", ()=>{dialog.close(); spreadsheet.addHabit(); dialog.remove(); ritual();})
+    const smll = document.createElement("small");
+    smll.textContent = "press esc to remove";
 
-  let smll=document.createElement("small");
-  smll.textContent="press esc to remove"
+    dialog.appendChild(title);
+    dialog.appendChild(goalBtn);
+    dialog.appendChild(habitBtn);
+    dialog.appendChild(smll);
 
-  document.body.appendChild(dialog);
-  dialog.appendChild(title);
-  dialog.appendChild(todo);
-  dialog.appendChild(goal);
-  dialog.appendChild(smll);
-  dialog.showModal();
-});
+    document.body.appendChild(dialog);
+    dialog.showModal();
 
-canvar.appendChild(add);
+  });
 
-
+  canvar.appendChild(add);
 }
-
-
-
-
-

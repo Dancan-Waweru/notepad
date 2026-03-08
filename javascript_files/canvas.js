@@ -1,4 +1,4 @@
-import { removeCanvar } from "./index.js";
+import { removeCanvar } from "./index.js";//error remove this line and create a function somewhere in another file
 
 export function canvar() {
 

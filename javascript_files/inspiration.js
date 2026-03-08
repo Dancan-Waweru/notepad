@@ -1,24 +1,14 @@
-let inspirationData = [];  // ← store the array here
+export async function inspire() {
+  try {
+    const res = await fetch('../javascript_files/index.json');
+    const data = await res.json();
+    const output = `"${data[Math.floor(Math.random() * data.length)]}"`;
 
-fetch('javascript_files/index.json')
-.then(res => res.json())
-.then(data => inspirationData = data); 
+    const change = document.getElementById("inspiration");
+    if(change) change.textContent = output;
 
-
-function randomQuote(){
-  return inspirationData[Math.floor(Math.random() * inspirationData.length)];
-}
-
-
-export function inspire(){
-  let article = document.createElement("article");
-
-  // if data hasn't loaded yet
-  if(inspirationData.length === 0){
-    article.textContent = "loading...";
-    return article;
+    return output; // can now store in dayState
+  } catch(err) {
+    console.error("Failed to load inspiration:", err);
   }
-
-  article.textContent = randomQuote();
-  return article;
 }
