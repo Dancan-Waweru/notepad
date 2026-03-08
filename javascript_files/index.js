@@ -88,7 +88,7 @@ function getHoliday(damonth) {
   const found = holidayData.holidays.find(h => h.date === damonth);
 
   if (found) {
-    return found;
+    return found.holiday;
   } else {
     return "nothing special today :)";
   }
@@ -117,7 +117,7 @@ if (document.querySelector("#time p")) {
 	
 
 
-	feature("progress", "70% complete", progressAnime, "15 incomplete tasks")
+	feature("progress", `Objectives: ${daystate.calculateProgress()}% complete`, progressAnime, `${daystate.groups.length} incomplete tasks`)
 
 	function progressAnime(){
 	let a = document.createElement("span");

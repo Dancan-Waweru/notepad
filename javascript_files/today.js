@@ -86,6 +86,26 @@ export const dayState = {
       setTimeout(() => target.appendChild(tr), 100);
     }
   },
+
+  calculateProgress(){
+    let total=0;
+    let output=0;
+
+    if (this.groups.length<=0) {
+      return 0;
+    }
+
+    this.groups.forEach(group=>{
+      total+=group.progress
+    });
+
+    let size=(this.groups.length)*100;
+
+    output=Math.floor((total*100)/size)
+
+    return output;
+
+  }
 };
 
 export default dayState;

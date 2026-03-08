@@ -7,15 +7,16 @@ export class GroupTask {
   constructor(name) {
     this.name = name;
     this.toDos = [];
+    this.progress=0;
   }
 
-  addToDo() {
+  addToDo(target) {
         userInput("what is the to do?", (name)=>{
    const clean = name.toLowerCase();
     if (this.findToDo(clean)) return false;
 
     this.toDos.push(new ToDo(clean));
-
+    this.listContents(target); console.log("please respond.")
     return true;
     })
 
@@ -43,12 +44,13 @@ listContents(target) {
 
     const self = this;
     addButton.addEventListener("click", function () {
-        self.addToDo();
+        self.addToDo(target);
+        self.updateProgress();
     });
 
     // Delete button
 const deleteButton = document.createElement("button");
-deleteButton.classList.add("txtDelete");
+deleteButton.classList.add("txtAdd");
 
 // Add the image
 const img = document.createElement("img");
@@ -59,14 +61,34 @@ img.style.height = "16px";
 deleteButton.appendChild(img);
 
     // Insert button above table
-    tableTasks.insertBefore(addButton, table);
 
-// Insert it next to the add button
-tableTasks.insertBefore(deleteButton, table);
+
+let progress=document.createElement("div");
+progress.textContent=this.calculateProgress()+"% complete";
+progress.classList.add("txtAdd");
+progress.id = "progressText";
+
+
+
+let container=document.createElement("div");
+container.style.display="flex";
+container.style.gap="1rem";
+container.style.borderBottom="1px solid black";
+container.style.borderLeft="1px solid black";
+container.style.borderRadius="2px";
+container.style.padding="0.3rem"
+container.style.margin="0.5rem";
+
+container.appendChild(addButton);
+container.appendChild(deleteButton);
+container.appendChild(progress);
+
+tableTasks.insertBefore(container, table);
 
 // Event listener to delete all completed todos
 deleteButton.addEventListener("click", () => {
     this.clearTasks(); 
+    this.updateProgress();
 });
 
 
@@ -117,6 +139,7 @@ deleteButton.addEventListener("click", () => {
 
         // Update status cell
         clickedRow.children[1].textContent = todo.done ? "complete" : "pending";
+        this.updateProgress();
     });
 }
 
@@ -138,8 +161,17 @@ deleteButton.addEventListener("click", () => {
       if (todo.done) completed++;
     }
 
-    return (completed * 100) / total;
+    let output=Math.floor((completed * 100) / total)
+    this.progress=output;
+    return output;
   }
+
+  updateProgress() {
+    const p = document.getElementById("progressText");
+    if (p) {
+        p.textContent = this.calculateProgress() + "% complete";
+    }
+}
 
   // contract: children MUST decide what this means
   clearTasks() {
@@ -226,6 +258,7 @@ export const dashboard = {
     userInput("what is the name of the goal", (name)=>{
         let smallname=name.toLowerCase();
     this.groups.push(new Goal(smallname));
+    ritual(this)
     return true;
     })
 
@@ -237,6 +270,7 @@ export const dashboard = {
           if (this.find(name)) return false;
           let smallname=name.toLowerCase();
     this.groups.push(new Habit(smallname));
+    ritual(this)
     return true;
     })
 

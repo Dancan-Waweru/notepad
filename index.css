@@ -328,7 +328,6 @@ button.txtAdd {
   color: white;
   border: none;
   outline: none;
-  margin: 1rem;
   transition: transform 0.2s ease;
   font-size: 1rem;
   padding: 0.3rem;
@@ -522,4 +521,12 @@ padding-left: 3rem;
 
 .holidayTag{
 display: block;
+}
+
+.txtAdd{
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+	align-content: center;
 }
