@@ -10,8 +10,9 @@ import { today as getToday } from "./time.js";
 import daystate from "./today.js";
 import {inspire} from "./inspiration.js"
 import {userInput} from "./userInput.js"
+import {changeWallArt, wallpaper} from "./wallpaper.js"
 
-
+wallpaper();
 
 
 let target=document.getElementById('main');
@@ -122,17 +123,23 @@ if (document.querySelector("#time p")) {
 	function progressAnime(){
 	let a = document.createElement("span");
 a.textContent = "●";                    
-a.style.color="grey";
+a.style.color="#C3C3C3";
 a.style.fontSize="2rem"
 
 let b= document.createElement("span"); 
 b.textContent = "●";                    
-b.style.color="black";
+b.style.color="#202022";
 b.style.fontSize="2rem"
 
+let d= document.createElement("span"); 
+d.textContent = "●";                    
+d.style.color="#878787";
+d.style.fontSize="2rem"
+
 let c=document.createElement("p");
-c.appendChild(a);
 c.appendChild(b);
+c.appendChild(d);
+c.appendChild(a);
 return (c);
 	}
 
@@ -193,3 +200,7 @@ document.getElementById("notes").addEventListener("click", () => {
 });
 
 
+document.getElementById("wallpaper").addEventListener("click", () => {
+	canvar();
+	changeWallArt();
+});

@@ -1,5 +1,5 @@
 body{
-	background-image: url('wallpapers/atul-pandey-plLJdnoVWbM-unsplash.jpg');
+	background-image: url('wallpapers/andrew-s-s-05NO4Xw6Y-unsplash.jpg');
 	background-size: cover;
 	font-family: "Caveat", cursive;
 
@@ -240,8 +240,8 @@ small{
     border-radius: 4px;
     position: relative;
     padding: 2rem;
-    background: rgba(255, 255, 255, 0.35);
-
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(4px); 
     overflow: auto;
 
     /* Hide scrollbar — Chrome, Edge, Safari */
@@ -408,6 +408,7 @@ button.CTA:hover{
 }
 #tableTasks{
 padding-left: 3rem;
+color: 	black;
 }
 
 .complete {
@@ -421,7 +422,7 @@ padding-left: 3rem;
 
 
 #tableTasks td:first-child {
-    min-width: 40vw;
+	    min-width: 40vw;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -529,4 +530,24 @@ display: block;
 	flex-direction: column;
 	align-items: center;
 	align-content: center;
+}
+
+.wall-option {
+    flex: 1;
+    overflow: hidden;
+    border-radius: 6px;
+    cursor: pointer;
+
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.wall-option img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.wall-option:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.25);
 }

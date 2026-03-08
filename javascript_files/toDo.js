@@ -1,6 +1,6 @@
 import {userInput} from "./userInput.js"
 import {ritual} from "./ritual.js"
-
+import daystate from "./today.js";
 
 
 export class GroupTask {

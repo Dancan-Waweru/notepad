@@ -4,6 +4,7 @@ import { inspire } from "./inspiration.js";
 import { userInput } from "./userInput.js";
 import { GroupTask, Goal, Habit, dashboard, ToDo } from "./toDo.js";
 import { ritual } from "./ritual.js";
+import {CTA, text, button, showPopup} from "./CTA.js"
 
 export const dayState = {
   groups: [],
@@ -33,6 +34,13 @@ export const dayState = {
     } else {
       console.log("why is this day so long!");
     }
+  },
+
+  addHabit(){
+    showPopup("sorry we can't do that here, proceed to milestones and add a habit there");
+    userInput("sorry we can't do that here, proceed to milestones and add a habit there", (name)=>{
+      showPopup("sorry can't do that here.");
+    })
   },
 
   loadHabits() {
