@@ -90,6 +90,7 @@ async changeDate() {
       const smallname = name.toLowerCase();
       this.groups.push(new Goal(smallname));
       ritual(this); // pass dayState explicitly
+      this.saveMemory()
       return true;
     });
   },

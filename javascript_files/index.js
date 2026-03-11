@@ -14,7 +14,11 @@ import {changeWallArt, wallpaper} from "./wallpaper.js"
 
 daystate.init()
 
-wallpaper();
+
+let wall=JSON.parse(localStorage.getItem("wall"));
+
+
+wall? wallpaper(wall): wallpaper();
 
 
 let target=document.getElementById('main');

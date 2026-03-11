@@ -413,11 +413,11 @@ color: 	black;
 
 .complete {
     text-decoration: line-through;
-    color: #878787;
+    color: grey;
 }
 
 .pending {
-    color: #878787;
+    color: grey;
 }
 
 

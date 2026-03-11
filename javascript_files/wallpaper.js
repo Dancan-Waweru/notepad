@@ -1,7 +1,8 @@
 
 
 export function wallpaper(wallpaper="../wallpapers/hubert-buratynski-V30noriNZxI-unsplash.jpg"){
-	document.body.style.backgroundImage=`url(${wallpaper})`
+	document.body.style.backgroundImage=`url(${wallpaper})`;
+    localStorage.setItem("wall", JSON.stringify(wallpaper));
 }
 
 export function changeWallArt() {
