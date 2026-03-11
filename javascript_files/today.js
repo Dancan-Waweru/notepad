@@ -11,30 +11,55 @@ export const dayState = {
   date: null,
   inspiration: null,
 
-  async init() {
-    this.date = getToday();
+async init() {
+  // load saved date if it exists
+  const savedDate = localStorage.getItem("date");
+  console.log(savedDate);
+  this.date = savedDate ? JSON.parse(savedDate) : this.changeDate();
+  
+
+  // load inspiration from memory if it exists
+  const savedInspiration = localStorage.getItem("inspiration");
+  this.inspiration = savedInspiration ? JSON.parse(savedInspiration) : await inspire();
+
+  // load groups
+  this.loadMemory();
+
+  // update DOM
+  const el = document.getElementById("inspiration");
+  if (el) el.textContent = this.inspiration;
+},
+
+
+async changeDate() {
+  const current = getToday();
+
+  if (current !== this.date) {
+    // new day detected
+    this.date = current;
+    this.reloadHabits();
+    this.recordHabits?.();
+    console.log("it is a new day!");
+
     this.inspiration = await inspire();
-  },
 
-  async changeDate() {
-    const current = getToday();
+    // save both date and inspiration
+    localStorage.setItem("inspiration", JSON.stringify(this.inspiration));
+    localStorage.setItem("date", JSON.stringify(this.date));
+    console.log(this.date);
+    console.log(this.inspiration);
 
-    if (current !== this.date) {
-      this.date = current;
-      this.reloadHabits();
-      this.recordHabits?.(); // optional, if you have recordHabits
-      console.log("it is a new day!");
+  } else {
+    console.log("why is this day so long!");
+    // no need to fetch inspiration, it is already loaded from memory
+  }
 
-      this.inspiration = await inspire();
+  // always update DOM
+  const el = document.getElementById("inspiration");
+  if (el) el.textContent = this.inspiration;
+}, 
 
-      const el = document.getElementById("inspiration");
-      if (el) el.textContent = this.inspiration;
 
-      this.reloadHabits();
-    } else {
-      console.log("why is this day so long!");
-    }
-  },
 
   addHabit(){
     showPopup("sorry we can't do that here, proceed to milestones and add a habit there");
@@ -95,25 +120,115 @@ export const dayState = {
     }
   },
 
-  calculateProgress(){
-    let total=0;
-    let output=0;
+ calculateProgress(){
 
-    if (this.groups.length<=0) {
-      return 0;
+  // total will store the sum of progress from all groups
+  let total = 0;
+
+  // final percentage that will be returned
+  let output = 0;
+
+  // if there are no groups there is no progress
+  if (this.groups.length <= 0) {
+    return 0;
+  }
+
+  // we store finished groups here first
+  // we DO NOT delete while looping through groups
+  // because modifying an array while iterating can break the loop
+  const finished = [];
+
+  // loop through every group
+  this.groups.forEach(group => {
+
+    // add this group's progress to the total
+    total += group.progress;
+
+    // if a group is complete mark it for removal
+    if (group.progress >= 100) {
+      finished.push(group.name);
     }
 
-    this.groups.forEach(group=>{
-      total+=group.progress
-    });
+  });
 
-    let size=(this.groups.length)*100;
+  // maximum possible progress
+  // example: 3 groups → 300 total possible progress
+  let size = (this.groups.length) * 100;
 
-    output=Math.floor((total*100)/size)
+  // calculate percentage of total progress
+  output = Math.floor((total * 100) / size);
 
-    return output;
+  // now remove groups that reached 100%
+  // we do this AFTER the loop to avoid array mutation issues
+  finished.forEach(name => {
+    this.deleteGroup(name);
+  });
 
+  // return the overall progress
+  return output;
+
+},
+
+  deleteGroup(name){
+  const index = this.groups.findIndex(g => g.name === name);
+
+  if(index === -1){
+    console.log("group not found");
+    return;
   }
+
+  this.groups.splice(index,1);
+
+  console.log("group removed:", name);
+},
+
+saveMemory(){
+
+  // convert groups into a simple object structure
+  const data = this.groups.map(group => ({
+    name: group.name,
+    type: group.type
+  }));
+
+  // store it as a string
+  localStorage.setItem("dayStateGroups", JSON.stringify(data));
+
+  console.log("saved");
+
+}, 
+
+loadMemory(){
+
+  const raw = localStorage.getItem("dayStateGroups");
+
+  // nothing saved yet
+  if(!raw){
+    console.log("nothing saved yet");
+    return;
+  }
+
+  console.log("I found data, proceeding with extraction");
+
+  const data = JSON.parse(raw);
+
+  data.forEach(item => {
+
+    if(item.type === "goal"){
+      this.groups.push(new Goal(item.name));
+    }
+
+    if(item.type === "habit"){
+      this.groups.push(new Habit(item.name));
+    }
+
+    if(item.type === "todo"){
+      this.groups.push(new ToDo(item.name));
+    }
+
+  });
+
+}
+
 };
 
 export default dayState;

@@ -12,6 +12,8 @@ import {inspire} from "./inspiration.js"
 import {userInput} from "./userInput.js"
 import {changeWallArt, wallpaper} from "./wallpaper.js"
 
+daystate.init()
+
 wallpaper();
 
 
