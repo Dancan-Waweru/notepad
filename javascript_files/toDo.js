@@ -16,12 +16,19 @@ export class GroupTask {
     if (this.findToDo(clean)) return false;
 
     this.toDos.push(new ToDo(clean));
-    this.listContents(target); console.log("please respond.")
+    this.listContents(target);
+    daystate.saveMemory();
+    dashboard.saveMemory();//hello bug
     return true;
     })
-
-
   }
+
+add(name, status){
+       const clean = name.toLowerCase();
+    if (this.findToDo(clean)) return false;
+
+    this.toDos.push(new ToDo(clean, status));
+}
 
 listContents(target) {
     // Clear previous wrapper if it exists
@@ -89,6 +96,7 @@ tableTasks.insertBefore(container, table);
 deleteButton.addEventListener("click", () => {
     this.clearTasks(); 
     this.updateProgress();
+    this.calculateProgress();
 });
 
 
@@ -140,6 +148,9 @@ deleteButton.addEventListener("click", () => {
         // Update status cell
         clickedRow.children[1].textContent = todo.done ? "complete" : "pending";
         this.updateProgress();
+        this.calculateProgress();
+        dashboard.saveMemory();
+        daystate.saveMemory();
     });
 }
 
@@ -232,9 +243,9 @@ export class Habit extends GroupTask {
 
 
 export class ToDo {
-  constructor(name) {
+  constructor(name, done=false) {
     this.name = name;
-    this.done = false;
+    this.done = done;
   }
 
   markDone() {
@@ -276,6 +287,76 @@ export const dashboard = {
 
   },
 
+   calculateProgress(){
+
+  // total will store the sum of progress from all groups
+  let total = 0;
+
+  // final percentage that will be returned
+  let output = 0;
+
+  // if there are no groups there is no progress
+  if (this.groups.length <= 0) {
+    return 0;
+  }
+
+  // we store finished groups here first
+  // we DO NOT delete while looping through groups
+  // because modifying an array while iterating can break the loop
+  const finished = [];
+
+  // loop through every group
+  this.groups.forEach(group => {
+
+    // add this group's progress to the total
+    total += group.calculateProgress();
+
+    // if a group is complete mark it for removal
+    if (group.progress >= 100) {
+      finished.push(group.name);
+    }
+
+  });
+  console.log(this.groups);
+
+  // maximum possible progress
+  // example: 3 groups → 300 total possible progress
+  let size = (this.groups.length) * 100;
+
+  // calculate percentage of total progress
+  output = Math.floor((total * 100) / size);
+
+  // now remove groups that reached 100%
+  // we do this AFTER the loop to avoid array mutation issues
+  finished.forEach(name => {
+    console.log(name)
+    this.deleteGroup(name);
+  });
+  console.log("process complete")
+
+  // return the overall progress
+  return output;
+
+},
+
+
+
+  deleteGroup(name){
+console.log("boot am tired")
+    console.log(name);
+console.log(this.groups);
+  const index = this.groups.findIndex(g => g.name === name);
+
+  if(index === -1){
+    console.log("group not found");
+    return;
+  }
+
+  this.groups.splice(index,1);
+
+  console.log("group removed:", name);
+},
+
 listContents(target) {
     if (this.groups.length !== 0) {
         this.groups.forEach((group, i) => {
@@ -305,6 +386,54 @@ listContents(target) {
             target.appendChild(tr);
         }, 100);
     }
+},
+
+saveMemory(){
+
+    localStorage.setItem("dashboard", JSON.stringify(this.groups));
+  console.log("saved");
+
+}, 
+
+loadMemory(){
+
+  const raw = localStorage.getItem("dashboard");
+
+  if(!raw){
+    console.log("nothing saved yet");
+    return;
+  }
+
+  console.log("I found data, proceeding with checking");
+
+  const data = JSON.parse(raw);
+  this.groups = [];
+
+  data.forEach(item => {
+
+    let organisation;
+
+    if(item.type === "goal"){
+      organisation = new Goal(item.name);
+    }
+
+    if(item.type === "habit"){
+      organisation = new Habit(item.name);
+    }
+
+    if(organisation){
+     
+      item.toDos.forEach(crew => {
+        
+        organisation.add(crew.name, crew.done);
+      });
+
+       this.groups.push(organisation);
+
+    }
+
+  });
+
 }
 
 

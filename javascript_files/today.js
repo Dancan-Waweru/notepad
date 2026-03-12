@@ -24,6 +24,9 @@ async init() {
 
   // load groups
   this.loadMemory();
+  dashboard.loadMemory();
+
+  this.calculateProgress();
 
   // update DOM
   const el = document.getElementById("inspiration");
@@ -143,7 +146,7 @@ async changeDate() {
   this.groups.forEach(group => {
 
     // add this group's progress to the total
-    total += group.progress;
+    total += group.calculateProgress();
 
     // if a group is complete mark it for removal
     if (group.progress >= 100) {
@@ -184,25 +187,22 @@ async changeDate() {
 },
 
 saveMemory(){
+  try {
+    const data = JSON.stringify(this.groups);
+    console.log("size:", data.length);
 
-  // convert groups into a simple object structure
-  const data = this.groups.map(group => ({
-    name: group.name,
-    type: group.type
-  }));
-
-  // store it as a string
-  localStorage.setItem("dayStateGroups", JSON.stringify(data));
-
-  console.log("saved");
-
-}, 
+    localStorage.setItem("groups", data);
+    console.log("saved");
+    console.log(localStorage);
+  } catch (err) {
+    console.error("LocalStorage failed:", err);
+  }
+},
 
 loadMemory(){
 
-  const raw = localStorage.getItem("dayStateGroups");
+  const raw = localStorage.getItem("groups");
 
-  // nothing saved yet
   if(!raw){
     console.log("nothing saved yet");
     return;
@@ -212,21 +212,32 @@ loadMemory(){
 
   const data = JSON.parse(raw);
 
+  this.groups = [];
+
   data.forEach(item => {
 
+    let organisation;
+
     if(item.type === "goal"){
-      this.groups.push(new Goal(item.name));
+      organisation = new Goal(item.name);
     }
 
     if(item.type === "habit"){
-      this.groups.push(new Habit(item.name));
+      organisation = new Habit(item.name);
     }
 
-    if(item.type === "todo"){
-      this.groups.push(new ToDo(item.name));
+    if(organisation){
+     
+      item.toDos.forEach(crew => {
+        
+        organisation.add(crew.name, crew.done);
+      });
+
+       this.groups.push(organisation);
+
     }
 
-  });
+  }); console.log(this.groups)
 
 }
 

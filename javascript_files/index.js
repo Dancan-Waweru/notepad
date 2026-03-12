@@ -13,7 +13,7 @@ import {userInput} from "./userInput.js"
 import {changeWallArt, wallpaper} from "./wallpaper.js"
 
 daystate.init()
-
+dashboard.calculateProgress();
 
 let wall=JSON.parse(localStorage.getItem("wall"));
 
